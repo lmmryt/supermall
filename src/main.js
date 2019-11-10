@@ -2,7 +2,8 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 Vue.config.productionTip = false
-
+// $bus 是vue实例,vue实例可以作为事件总线
+Vue.prototype.$bus = new Vue()
 new Vue({
   render: h => h(App),
   router

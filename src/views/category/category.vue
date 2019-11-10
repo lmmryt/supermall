@@ -1,7 +1,12 @@
 <!--  -->
 <template>
   <div class="wrapper">
+    <!-- 1.无论是否设置click:true,button 都可以点击 -->
+    <button >按钮</button>
+    <!-- 2.必须设置click:true,才可以点击 -->
+    <div >呵呵</div>
     <ul class="content">
+      <button @click='btn'>按钮</button>
       <li>分类列表1</li>
       <li>分类列表2</li>
       <li>分类列表3</li>
@@ -112,16 +117,30 @@
 import BScroll from "better-scroll";
 export default {
   name: "category",
+  methods:{
+    btn(){
+      console.log(1)
+    }
+  },
   data() {
     return {
-
+      bscroll:null
     };
   },
   // 会有弹簧效果
   mounted() {
-    let wrapper = document.querySelector('.wrapper')
-    new BScroll(wrapper);
-    
+    let wrapper = document.querySelector(".wrapper");
+    this.bscroll = new BScroll(wrapper, {
+      probeType: 2,
+      pullUpLoad: true
+    });
+    this.bscroll.on("scroll", position => {
+      console.log(position);
+    });
+    this.bscroll.on("pullingUp", () => {
+      console.log("上拉加载");
+      bscroll.finishPullUp();
+    });
   }
 };
 </script>

@@ -2,40 +2,54 @@
   <swiper ref="swiper" v-if="banners.length">
     <swiper-item v-for="(item, index) in banners" :key="index">
       <a :href="item.link">
-        <img :src="item.image" alt="">
+        <img :src="item.image"
+             alt=""
+             @load="imageLoad">
       </a>
-    </swiper-item>
+    </swiper-item >
   </swiper>
 </template>
 
 <script>
-  import {Swiper, SwiperItem} from 'components/common/swiper'
+import { Swiper, SwiperItem } from "components/common/swiper";
 
-	export default {
-		name: "HomeSwiper",
-    components: {
-		  Swiper,
-      SwiperItem
+export default {
+  name: "HomeSwiper",
+  components: {
+    Swiper,
+    SwiperItem
+  },
+  props: {
+    banners: {
+      type: Array,
+      default: []
+    }
+  },
+  data() {
+    return {
+      isLoad: true
+    };
+  },
+  methods: {
+    stopTimer() {
+      this.$refs.swiper.stopTimer();
     },
-    props: {
-		  banners: {
-		    type: Array,
-        default: []
+    startTimer() {
+      if (this.$refs.swiper) {
+        this.$refs.swiper.startTimer();
       }
     },
-    methods: {
-		  stopTimer() {
-		    this.$refs.swiper.stopTimer()
-      },
-      startTimer() {
-		    if (this.$refs.swiper) {
-          this.$refs.swiper.startTimer()
-        }
+    imageLoad() {
+      // console.log('完成');
+      // 因为有4张图片，会发射4次事件，可以用一个变量，
+      if (this.isLoad) {
+        this.$emit("swiperImage");
+        this.isLoad = false;
       }
     }
-	}
+  }
+};
 </script>
 
 <style scoped>
-
 </style>

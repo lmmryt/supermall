@@ -38,7 +38,6 @@ export default {
 }
 .center{
   flex:1;
-  color: white;
   /* background-color: #433; */
 }
 </style>
