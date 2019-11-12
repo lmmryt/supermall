@@ -25,6 +25,7 @@ export default {
   methods:{
     btn(index){
       this.curIndex = index;      
+      this.$emit('titleClick',index)
     },
     backClick(){
       // this.$router.go(-1)

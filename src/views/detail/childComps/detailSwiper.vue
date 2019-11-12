@@ -1,9 +1,10 @@
 <!--  -->
 <template>
 
-  <swiper class="swiper-item">
-    <swiper-item v-for="item in topImages"
-                 class="">
+  <swiper class="detail-swiper" v-if="images.length">
+    <!--  :key="item" 这个挺重要的，否则轮播图不能正常轮播-->
+    <swiper-item v-for="(item,index) in images"
+                 class="" :key="index">
       <img :src="item"
            alt="">
     </swiper-item>
@@ -16,8 +17,12 @@ import { Swiper, SwiperItem } from "components/common/swiper";
 
 export default {
   name: "detailSwiper",
+   components: {
+    Swiper,
+    SwiperItem
+  },
   props: {
-    topImages: {
+    images: {
       type: Array,
       default() {
         return [];
@@ -26,15 +31,12 @@ export default {
   },
   data() {
     return {};
-  },
-  components: {
-    Swiper,
-    SwiperItem
   }
+ 
 };
 </script>
 <style  scoped>
-.swiper-item {
+.detail-swiper {
   height: 300px;
   overflow: hidden;
 }

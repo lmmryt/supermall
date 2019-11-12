@@ -1,6 +1,7 @@
 <template>
   <!-- 插槽上最好不要放别的属性 -->
-  <div class="tab-bar-item" @click="itemClick">
+  <div class="tab-bar-item"
+       @click="itemClick">
     <div v-if="!isActive">
       <slot name="item-icon"></slot>
     </div>
@@ -19,9 +20,9 @@ export default {
   name: "TarBarItem",
   props: {
     path: String,
-    activeColor:{
-      type:String,
-      default:'red'
+    activeColor: {
+      type: String,
+      default: "red"
     }
   },
   data() {
@@ -29,12 +30,13 @@ export default {
       // isActive: true
     };
   },
-  computed:{
-    isActive(){
-      return this.$route.path.indexOf(this.path) !==-1
+  computed: {
+    isActive() {
+      
+      return this.$route.path.indexOf(this.path) !== -1;
     },
-    activeStyle(){
-      return this.isActive ? {color:this.activeColor} : {}
+    activeStyle() {
+      return this.isActive ? { color: this.activeColor } : {};
     }
   },
   methods: {
@@ -57,5 +59,4 @@ export default {
   vertical-align: middle;
   margin-bottom: 3px;
 }
-
 </style>

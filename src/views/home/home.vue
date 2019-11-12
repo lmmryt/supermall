@@ -4,11 +4,12 @@
     <nav-bar class="homenav">
       <div slot="center">购物街</div>
     </nav-bar>
+    <!-- 假的一层 -->
     <tab-control :titles='["流行","新款","精选"]'
-                   class="tabControl"
-                   @tabclick="tabclick"
-                   ref='tabControl1'
-                  v-show="isTabFixed"></tab-control>
+                 class="tabControl"
+                 @tabclick="tabclick"
+                 ref='tabControl1'
+                 v-show="isTabFixed"></tab-control>
     <scroll class='content'
             ref="scroll"
             :probe-type=3
@@ -22,8 +23,7 @@
       <tab-control :titles='["流行","新款","精选"]'
                    class="tabControl"
                    @tabclick="tabclick"
-                   ref='tabControl2'
-                  ></tab-control>
+                   ref='tabControl2'></tab-control>
       <goods-list :goods='showGoods'></goods-list>
     </scroll>
     <!-- 组件不能直接监听@click事件 -->
@@ -45,7 +45,8 @@ import RecommendView from "./childComps/RecommendView";
 import FeatureView from "./childComps/FeatureView";
 // 没有用default导出 所以需要大括号导入
 import { getHomeMultidata, getHomeGoods } from "network/home";
-import { debounce } from "common/utils";
+
+import { itemListenerMixin } from "common/mixin";
 
 export default {
   name: "home",
@@ -54,6 +55,9 @@ export default {
       return this.goods[this.currentStatus].list;
     }
   },
+  mixins:[
+    itemListenerMixin
+  ],
   data() {
     return {
       banners: [],
@@ -67,8 +71,8 @@ export default {
       isShowBack: false,
       pullUpLoad: true,
       tabOffsetTop: 0,
-      isTabFixed:false,
-      saveY:0
+      isTabFixed: false,
+      saveY: 0,
     };
   },
   components: {
@@ -90,23 +94,20 @@ export default {
     this.getHomeGoods("new");
     this.getHomeGoods("sell");
   },
-  activated(){
-    this.$refs.scroll.scrollTo(0,this.saveY,0)
+  activated() {
+    this.$refs.scroll.scrollTo(0, this.saveY, 0);
     // 回来时最好进行一次refresh
-    this.$refs.scroll.refresh()
+    this.$refs.scroll.refresh();
   },
-  deactivated(){
-    this.saveY = this.$refs.scroll.getScrollY()
+  deactivated() {
+    // 1.保存Y值
+    this.saveY = this.$refs.scroll.getScrollY();
     // console.log(this.saveY);
-    
+    // 2.取消全局事件的监听
+    this.$bus.$off("itemImageLoad", this.homeImgLoad);
   },
   mounted() {
-    // 监听图片加载完成
-    // 事件总线
-    const refresh = debounce(this.$refs.scroll.refresh, 200);
-    this.$bus.$on("itemImageLoad", () => {
-      refresh();
-    });
+    
   },
   methods: {
     //
@@ -145,18 +146,18 @@ export default {
         case 2:
           this.currentStatus = "sell";
       }
-      this.$refs.tabControl1.curIndex = index
-      this.$refs.tabControl2.curIndex  = index
+      this.$refs.tabControl1.curIndex = index;
+      this.$refs.tabControl2.curIndex = index;
     },
     backBtn() {
       this.$refs.scroll.scrollTo(0, 0, 500);
     },
     scrollPosition(position) {
       // 1.判断backTop是否显示
-      this.isShowBack = -position.y > 500
+      this.isShowBack = -position.y > 500;
 
       // 2.决定tabControl是否吸顶
-      this.isTabFixed = -position.y >this.tabOffsetTop
+      this.isTabFixed = -position.y > this.tabOffsetTop;
     },
     loadmore() {
       this.getHomeGoods(this.currentStatus);
@@ -177,6 +178,7 @@ export default {
 #home {
   /* padding-top: 44px; */
   /* vh view  */
+  /* height: 100vh; */
   height: 100vh;
   position: relative;
 }
@@ -203,8 +205,9 @@ export default {
   position: absolute;
   top: 44px;
   bottom: 49px;
+  overflow: hidden;
 }
-.tabC{
+.tabC {
   position: relative;
   z-index: 9;
 }
@@ -213,6 +216,5 @@ export default {
   overflow: hidden;
   margin-top: 44px;
 } */
-
 </style>
 
